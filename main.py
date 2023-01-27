@@ -19,11 +19,12 @@ import os
 from dotenv import load_dotenv
 
 
+
 load_dotenv()
 
 cache = dict()
 lastalbum = ""
-def AppleAPIGet(album):
+def AppleAPIGet(album, artist):
     # This will get the album data from apple once then cache the result so that i dont keep pinging apple with my shenanigans
     print (album)
     s = shelve.open("apapi_url_cache")
@@ -35,7 +36,7 @@ def AppleAPIGet(album):
             s.close()
     else:
         print("APPLE API - NO CACHE FOUND")
-        album_sp = album.replace(" ", "%20")
+        album_sp = album.replace(" ", "%20") + "%20" + artist.replace(" ","%20")
         res = get(url=f"https://itunes.apple.com/search?term={album_sp}&entity=album&country=GB&limit=1")
         res = res.json()
         print(res)
@@ -75,14 +76,14 @@ def getCurrentSong():
     # 3 - Length of Song
     return prop
 
-def getAlbumArt(album):
-    res = AppleAPIGet(album)
+def getAlbumArt(amdata):
+    res = AppleAPIGet(amdata[2],amdata[0])
     res = res['results'][0]['artworkUrl100']
 
     return res
 
-def getAppleMusicURL(album):
-    res = AppleAPIGet(album)
+def getAppleMusicURL(amdata):
+    res = AppleAPIGet(amdata[2], amdata[0])
     res = res['results'][0]['collectionViewUrl']
     return res
 
@@ -112,7 +113,7 @@ while True:
             # Get the artist name, track name, album name and length of the track
             amdata = getCurrentSong()
             # Using the album name get the artwork
-            albimg = getAlbumArt(amdata[2])
+            albimg = getAlbumArt(amdata)
             # Update RPC - 
             #   State       - (Artist Name)
             #   Details     - (Song Name)
@@ -121,7 +122,7 @@ while True:
     elif rpc_updated_paused == False:
         
         amdata = getCurrentSong()
-        albimg = getAlbumArt(amdata[2])
+        albimg = getAlbumArt(amdata)
         # The song is currently paused so we want to reflect that in the RPC
         RPC.update(state=amdata[1] + " - " + amdata[0], details=amdata[2], large_image=albimg, small_image="paused", buttons=[{"label":"Listen on Apple Music", "url":getAppleMusicURL(amdata[2])}])
         # The player is currently paused so we set this variable to make sure the RPC reflects that until the player is unpaused
