@@ -3,4 +3,4 @@ apapi_url_cache.db
 .env
 .DS_Store
 *.pyc
-
+.flask_session

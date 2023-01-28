@@ -25,6 +25,14 @@ Das about it.
 - 
 
 
+# Last.FM Integration
+
+What currently works:
+- Authentication
+
+Auth works but needs to be moved into its own function call. The requests also need to be edited so that they can use json but still turn up as url parameters so the same data can be passed to the url and to the api_sig generation function.
+
+
 &nbsp;
 &nbsp;
 
