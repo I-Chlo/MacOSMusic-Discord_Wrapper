@@ -30,6 +30,9 @@ Das about it.
 
 What currently works:
 - Authentication
+    - Auth works but needs to be moved into its own function call. The requests also need to be edited so that they can use json but still turn up as url parameters so the same data can be passed to the url and to the api_sig generation function.
+    &nbsp;
+    
 - Now Playing
     ![alt text](https://github.com/I-Chlo/MacOSMusic-Discord_Wrapper/blob/a16d7ba8950a512481e5b03b8b2cc73e52052407/images/LAST.FM%20-%20Now%20Playing.jpg?raw=true)
     - Every time a new track is played on Apple Music the RPC script sends a POST Request to the Flask server.
@@ -57,7 +60,7 @@ What currently works:
         This returns the data sent and displays if any fields had to be corrected.
 
 
-Auth works but needs to be moved into its own function call. The requests also need to be edited so that they can use json but still turn up as url parameters so the same data can be passed to the url and to the api_sig generation function.
+
 
 
 &nbsp;
