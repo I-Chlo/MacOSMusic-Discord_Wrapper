@@ -22,13 +22,15 @@ Das about it.
     - Add button to users last.fm page.
 - Refactor into Node.Js and use the Discord Game SDK
     - Learn how to use Node.JS
-- 
+- Make token and session key storage secure
+    - See https://martinheinz.dev/blog/59
 
 
 # Last.FM Integration
 
 What currently works:
 - Authentication
+- Now Playing
 
 Auth works but needs to be moved into its own function call. The requests also need to be edited so that they can use json but still turn up as url parameters so the same data can be passed to the url and to the api_sig generation function.
 

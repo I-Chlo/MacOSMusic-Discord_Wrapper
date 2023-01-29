@@ -18,6 +18,7 @@ import shelve
 import os
 from dotenv import load_dotenv
 import logging
+import requests
 
 
 
@@ -132,6 +133,8 @@ def RPC_Thread(event):
                     print("DISCORD - Displaying Song")
                     print("PLAYER  - " + str(amdata[1]) + " by " + str(amdata[0]))
                     RPC.update(state="by " + amdata[0], details=amdata[1], large_image=albimg, start=time.time(), end=time.time()+float(amdata[3])-float(getPlayerPosition()), buttons=[{"label":"Listen on Apple Music", "url":getAppleMusicURL(amdata)}])
+                    # We need to tell the host that we are playing a new song
+                    requests.post("http://127.0.0.1:5000/api/rpc/now_playing", json={"artist":amdata[0],"track":amdata[1],"album":amdata[2],"duration":amdata[3]})
             elif rpc_updated_paused == False:
                 
                 amdata = getCurrentSong()
