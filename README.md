@@ -75,6 +75,7 @@ What currently works:
         This returns the data sent and displays if any fields had to be corrected.
 
 - Scrobbling
+    - ![scobbling image](https://github.com/I-Chlo/MacOSMusic-Discord_Wrapper/blob/38e129f779448a66034b01ed5db77de11bfb6cd4/images/LAFT%20FM%20-%20Scrobble.jpg?raw=true)
     - The Scrobbling atm is a bit mid im not gonna lie but it is working... mostly
     - When a track is first played the start time is recorded (in UNIX time)
     - When the song has finished playing the recorded time is subtracked from the current time to get the duration of time the song was listen to
