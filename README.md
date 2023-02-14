@@ -9,14 +9,28 @@ Bascially program flow goes something like this:
 
 Das about it.  
 
+💅🏻✨ Your welcome ✨💅🏻
+
 &nbsp;
 &nbsp;
 
+# Known Issues
+
+- Online interface is bad
+    - I know its bad
+        - I will fix it
+            - When i have time 
+- Random crashes due to album art errors
+- Flask storing a huge amount of session files
+- Last FM token only working if you referesh the webpage then enable rpc
+- General Shenanigans
+
+&nbsp;
 
 # To-Do
 - Write the program 
 - Create my own rich presence wrapper cuz i dont need all the features
-- Get Album Artwork for Song
+- ~~Get Album Artwork for Song~~
 - Add Last.Fm Integration
     - Scobbling?
     - Add button to users last.fm page.
@@ -24,8 +38,9 @@ Das about it.
     - Learn how to use Node.JS
 - Make token and session key storage secure
     - See https://martinheinz.dev/blog/59
+- ~~move scrobble code to its own function~~
 
-
+&nbsp;
 # Last.FM Integration
 
 What currently works:
@@ -59,10 +74,55 @@ What currently works:
         ```
         This returns the data sent and displays if any fields had to be corrected.
 
+- Scrobbling
+    - The Scrobbling atm is a bit mid im not gonna lie but it is working... mostly
+    - When a track is first played the start time is recorded (in UNIX time)
+    - When the song has finished playing the recorded time is subtracked from the current time to get the duration of time the song was listen to
+    <br>
+    If this is greater than at least of the duration of the song the scrobble is valid and will be submitted to last.fm
+
+    - The majority of the logic is in the RPC.py file as to minimise the communication between the flask and rpc threads
+
+        ```
+        <?xml version="1.0" encoding="UTF-8"?>
+        <lfm status="ok">
+        <scrobbles ignored="0" accepted="1">
+            <scrobble>
+            <track corrected="0">True Love Knows No Death</track>
+            <artist corrected="0">Kele</artist>
+            <album corrected="0">The Flames, Pt. 2</album>
+            <albumArtist corrected="0"></albumArtist>
+            <timestamp>1676402045.7146</timestamp>
+            <ignoredMessage code="0"></ignoredMessage>
+            </scrobble>
+        </scrobbles>
+        </lfm>
+        ```
+
+        Above is an example of a response from Last.FM after submitting a successful scrobble.
+        Again like in the now playing example it will inform you if there are any entry's it had to correct or if the scrobble was rejected.
 
 
 
 
+
+
+
+
+# Notes
+
+Detect if playhead has been moved / how long the song has been playing for
+```
+song start:
+    set epoch start
+
+song end:
+    if start - finish >= track_duration/2 seconds
+        scrobbled
+    else
+        dont
+    
+```
 &nbsp;
 &nbsp;
 

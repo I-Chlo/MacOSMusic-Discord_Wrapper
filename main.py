@@ -32,6 +32,8 @@ rpc_process = None
 lastfm_session_key = ""
 lastfm_user_name = ""
 # This will not stay like this this is just for testing
+
+
 @app.route("/")
 def index():
     global lastfm_session_key
@@ -50,6 +52,8 @@ def index():
         return redirect('/')
     try:
         if session["lastfm_session_key"] != "":
+            print(session['lastfm_session_key'])
+            lastfm_session_key = session['lastfm_session_key']
         # We are authenitcated
             return render_template("home.html")
     except:
@@ -70,6 +74,24 @@ def lastfm_getTopTracks():
 def lastfm_login():
     return redirect("http://www.last.fm/api/auth/?api_key="+os.getenv("LASTFM_API_KEY")+"&cb=http://127.0.0.1:5000", code=302)
 
+@app.route("/api/rpc/scrobble", methods=["GET","POST"])
+def lastfm_scrobble():
+    try:
+        if lastfm_session_key != "":
+            print("LASTFM - NowPlaying: lastfm linked")
+            if request.method == 'POST':
+                print("req2")
+                data = request.json
+                requestJson = {"artist":str(data["artist"]),"track":str(data["track"]),"album":str(data["album"]),"duration":str(data["duration"]),"timestamp":str(data["timestamp"]),"api_key":str(os.getenv("LASTFM_API_KEY")),"sk":str(lastfm_session_key),"method":"track.scrobble"}
+                requestJson["api_sig"] = tools.lastfm_gen_api_sig(requestJson)
+                lfm_scrobble = requests.post("http://ws.audioscrobbler.com/2.0/", requestJson)
+                print(lfm_scrobble.text)
+    except Exception as e:
+        print(e)
+        print("LASTFM - NowPlaying: lastfm not linked")
+    return 'OK'
+
+
 @app.route("/api/rpc/now_playing", methods=['GET','POST'])
 def rpc_now_playing():
     # We now need to send a request to Last.FM to tell her that we are listening to a song.
@@ -79,12 +101,11 @@ def rpc_now_playing():
         if lastfm_session_key != "":
             print("LASTFM - NowPlaying: lastfm linked")
             if request.method == 'POST':
-                print("req2")
+              
                 data = request.json
-                print(data)
                 requestJson = {"artist":str(data["artist"]),"track":str(data["track"]),"album":str(data["album"]),"duration":str(data["duration"]),"api_key":str(os.getenv("LASTFM_API_KEY")),"sk":str(lastfm_session_key),"method":"track.updateNowPlaying"}
                 requestJson["api_sig"] = tools.lastfm_gen_api_sig(requestJson)
-                print(requestJson)
+               
                 lastfm_nowplaying = requests.post("http://ws.audioscrobbler.com/2.0/", requestJson)
                 print(lastfm_nowplaying.text)
     except Exception as e:

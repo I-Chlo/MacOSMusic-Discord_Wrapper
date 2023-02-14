@@ -4,3 +4,4 @@ apapi_url_cache.db
 .DS_Store
 *.pyc
 .flask_session
+__pycache__
